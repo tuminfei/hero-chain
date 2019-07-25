@@ -133,7 +133,22 @@ impl system::Trait for Runtime {
 	type Log = Log;
 	/// The ubiquitous origin type.
 	type Origin = Origin;
+
 }
+
+impl srml_contract::Trait for Runtime {
+	type Currency = Balances;
+	type Call = Call;
+	type Event = Event;
+	type Gas = u64;
+	type DetermineContractAddress = srml_contract::SimpleAddressDeterminator<Runtime>;
+	type ComputeDispatchFee = srml_contract::DefaultDispatchFeeComputor<Runtime>;
+	type TrieIdGenerator = srml_contract::TrieIdFromParentCounter<Runtime>;
+	type GasPayment = ();
+}
+
+// This is the sudo-contract Trait
+impl contract::Trait for Runtime {}
 
 impl aura::Trait for Runtime {
 	type HandleReport = ();
@@ -212,6 +227,8 @@ construct_runtime!(
 		Indices: indices,
 		Balances: balances,
 		Sudo: sudo,
+		Contract: srml_contract::{Module, Storage, Config<T>, Event<T>},
+ 		SudoContract: contract::{Module, Call},
 		// Used for the module template in `./template.rs`
 		TemplateModule: template::{Module, Call, Storage, Event<T>},
 		Demo: demo::{Module, Call, Storage},

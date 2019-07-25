@@ -34,6 +34,7 @@ decl_module! {
           // Ensure that the function call is a signed message (i.e. a transaction)
           let _ = ensure_signed(origin)?;
 
+
           // If `payment` is not initialized with some value
           if Self::payment().is_none() {
             // Set the value of `payment`
